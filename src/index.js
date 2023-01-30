@@ -1,10 +1,13 @@
 require("dotenv").config();
 const express = require("express");
 const morgan = require("morgan");
+const cors = require('cors')
 const http = require("./httpCommon");
-const fsManager = require("./fsManager");
+const cache = require('./cacheMiddleware')
 
 app = express();
+
+app.use(cors())
 
 app.use(morgan("dev"));
 app.use(express.urlencoded({ extended: false }));
@@ -13,7 +16,7 @@ app.use(express.json());
 const favorites = [];
 
 //List song by artist
-app.get("/songs", async (req, res) => {
+app.get("/songs", cache(3600), async (req, res) => {
   const query = req.query;
 
   const params = {
@@ -28,13 +31,9 @@ app.get("/songs", async (req, res) => {
     params,
   });
 
-  // console.log(resultSet.data, 'resultSet')
-
   const albums = Array.from(
     new Set(resultSet.data.results.map((item) => item.collectionName))
   );
-
-  console.log(albums, "albums");
 
   res.json({
     resultsCount: resultSet.data.resultCount,
