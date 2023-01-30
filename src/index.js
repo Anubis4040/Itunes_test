@@ -43,6 +43,14 @@ app.get("/songs", cache(3600), async (req, res) => {
   });
 });
 
+//List favorite songs
+app.get("/favorites", async (req, res) => {
+  res.json({
+    resultsCount: favorites.length,
+    favoriteSongs: favorites,
+  });
+});
+
 //Set song as favorite
 app.post("/favorites", async (req, res, next) => {
   const body = req.body;
