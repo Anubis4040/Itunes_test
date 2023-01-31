@@ -27,7 +27,7 @@ app.get("/songs", cache(3600), async (req, res) => {
     limit: 25,
   };
 
-  const resultSet = await http.get(`${process.env.ITUNES_API_URL}/search`, {
+  const resultSet = await http.get(`/search`, {
     params,
   });
 
@@ -59,7 +59,7 @@ app.post("/favorites", async (req, res, next) => {
     id: body.trackId,
   };
 
-  const resultSet = await http.get(`${process.env.ITUNES_API_URL}/lookup`, {
+  const resultSet = await http.get(`/lookup`, {
     params,
   });
 
